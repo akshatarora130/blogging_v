@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Blog Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: rosybrown;
+        }
+
+        div.container {
+            margin: 20px;
+            padding: 20px;
+            background-color: rosybrown;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 51.25%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            margin-top: 0;
+            color: whitesmoke;
+        }
+
+        div.blog {
+            background-color: lavenderblush;
+            margin-top: 20px;
+            padding: 20px;
+            border: 4px solid #333;
+            border-radius: 8px;
+            text-align: left;
+            color: saddlebrown;
+        }
+
+        div.blog-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        div.blog-content {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .approve {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: -18px;
+            margin-left: 500px;
+            height: 40px;
+            width: 100px;
+            margin-bottom: -5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .reject {
+            background-color: orangered;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: -18px;
+            margin-bottom: -5px;
+            height: 40px;
+            width: 100px;
+            transition: background-color 0.3s ease;
+        }
+
+        .approve:hover {
+            background-color: lightgreen;
+        }
+
+        .reject:hover {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/myblog">My Blogs</a></li>
+        <li><a href="/blogs">All Blogs</a></li>
+        {{#if user.isAdmin}}
+            <li><a href="/notifications">Notifications</a></li>
+        {{/if}}
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <h1>Pending Blogs</h1>
+    {{#if blogs.length}}
+        {{#each blogs as |blog| }}
+            {{#unless blog.approved}}
+                <div class="blog" id="blog-{{blog._id}}">
+                    <p><b>Username:</b> {{blog.user.username}}</p>
+                    <p class="blog-title"><b>Title:</b> {{blog.title}}</p>
+                    <p class="blog-content"><b>Content:</b> {{blog.content}}</p>
+                    <button class ="approve" onclick="approve('{{blog._id}}')">Approve</button>
+                    <button class="reject" onclick="reject('{{blog._id}}')">Reject</button>
+                </div>
+            {{/unless}}
+        {{/each}}
+    {{/if}}
+</div>
+<script>
+    const approve = async function(b){
+        try {
+            const response = await fetch(`/approve/${b}`, { method: 'POST' });
+            if (response.ok) {
+                console.log(`Blog with ID ${b} approved.`);
+                const approvedBlog = document.getElementById(`blog-${b}`);
+                if (approvedBlog) {
+                    approvedBlog.remove();
+                }
+            } else {
+                console.error(`Failed to approve blog with ID ${b}.`);
+            }
+        } catch (error) {
+            console.error(`Error while approving blog with ID ${b}: ${error.message}`);
+        }
+    }
+
+    const reject = async function(b){
+        try {
+            const response = await fetch(`/reject/${b}`, { method: 'POST' });
+            if (response.ok) {
+                console.log(`Blog with ID ${b} rejected.`);
+                const rejectedBlog = document.getElementById(`blog-${b}`);
+                if (rejectedBlog) {
+                    rejectedBlog.remove();
+                }
+            } else {
+                console.error(`Failed to reject blog with ID ${b}.`);
+            }
+        } catch (error) {
+            console.error(`Error while rejecting blog with ID ${b}: ${error.message}`);
+        }
+    }
+</script>
+
+</body>
+</html>

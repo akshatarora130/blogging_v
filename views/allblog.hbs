@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Blog Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: rosybrown;
+        }
+
+        div.container {
+            margin: 20px;
+            padding: 30px;
+            background-color: rosybrown;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            margin-top: -5px;
+            color: whitesmoke;
+        }
+
+        div.blog {
+            background-color: lavenderblush;
+            margin-top: 20px;
+            padding: 20px;
+            border: 4px solid #333;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        div.blog-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        div.blog-content {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        p{
+            color: saddlebrown;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/myblog">My Blogs</a></li>
+        <li><a href="/blogs">All Blogs</a></li>
+        {{#if user.isAdmin}}
+            <li><a href="/notifications">Notifications</a></li>
+        {{/if}}
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <h1>All Blogs</h1>
+    {{#each blogs as |blog| }}
+        {{#if blog.approved}}
+            <div class="blog">
+                <p><b>Username:</b> {{blog.user.username}}</p>
+                <p class="blog-title"><b>Title:</b> {{blog.title}}</p>
+                <p class="blog-content"><b>Content:</b> {{blog.content}}</p>
+            </div>
+        {{/if}}
+    {{/each}}
+</div>
+</body>
+</html>

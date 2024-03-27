@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1{
+            margin-top: -100px;
+            margin-bottom: 0px;
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: rosybrown;
+        }
+
+        .div{
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+<div class="div">
+    <h1>Edit Blog</h1>
+    <p>After editing approval request will again be sent </p>
+    <form action="/updateBlog/{{blog._id}}" method="post">
+        <input type="text" id="title" name="title" value='{{blog.title}}'>
+        <input type="text" id="content" name="content" value='{{blog.content}}'>
+        <button type="button" onclick="updateBlog()">Update</button>
+    </form>
+</div>
+<script>
+    const updateBlog = () => {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        const updatedData = { title, content };
+
+        fetch("/updateBlog/{{blog._id}}" , {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Blog updated successfully');
+                        window.location.href = "/";
+                    } else {
+                        console.error('Failed to update blog.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating blog: ' + error);
+                });
+    }
+</script>
+</body>
+</html>
